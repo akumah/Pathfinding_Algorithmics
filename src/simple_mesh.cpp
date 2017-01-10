@@ -1,67 +1,59 @@
+#include <cassert>
 #include "simple_mesh.hpp"
 
-SimpleMesh::SimpleMesh(const Point2D& shape) {
-	init(shape)
-}
-
-SimpleMesh::SimpleMesh(const int width, const int height) {
-	shape = Point2D(width, height);
-	init(shape)
-}
-
-SimpleMesh::~SimpleMesh(){}
-
-void SimpleMesh::init(const Point2d &shape) {
-	d_data(shape.x * shape.y);
-	d_shape(shape);
-}
-
 void SimpleMesh::addObstacle(const Point2D &org, const Point2D &shape) {
-	setSubRect(org, shape, 1);
+	setSubRect(org, shape, true);
 }
 
 void SimpleMesh::removeObstacle(const Point2D &org, const Point2D &shape) {
-	setSubRect(org, shape, 0);
+	setSubRect(org, shape, false);
 }
 
+/* Set the value of all elements in a subrectangle of mesh to value */
 void SimpleMesh::setSubRect(const Point2D& org, const Point2D& shape, int value) {
 	int start_idx = org.y * d_shape.x + org.x;
 	d_data[std::gslice(start_idx, {shape.y, shape.x}, {d_shape.x, 1})] = value;
 }
 
-bool SimpleMesh::isAccessible(const Point2D& point) {
+bool SimpleMesh::isAccessible(const Point2D& point) const {
 	if ((point.x >= 0) && (point.x < d_shape.x) && (point.y >= 0) && (point.y < d_shape.y)){
-		return d_data[point.y*d_shape.x + point.x];
+		return !d_data[point.y*d_shape.x + point.x];
 	}
 	else {
 		return false;
 	}
 }
 
-float SimpleMesh::getDistance(const Point2D& from, const Point2D& to) {
-	const float n_hv = 1;  // Distance of a horizontal or vertical neighbour
+float SimpleMesh::getDistance(const Point2D& from, const Point2D& to) const {
 	const float n_d = 1.414213562;  // Distance of a diagonal neighbour
+	if (from == to) {
+		return 0.0;
+	}
 	Point2D diff = to - from;
 	if (abs(diff.x) + abs(diff.y) == 1) {  // Manhattan distance
-		return n_hv;
+		return 1.0;
 	}
 	if (abs(diff.x) == 1 && abs(diff.y) == 1) {
 		return n_d;
 	}
-	return euclideanDist(from, to)
+	return euclideanDist(from, to);
 }
 
-float SimpleMesh::getHeuristic(const Point2D& from, const Point2D& to) {
-	return SimpleMesh::getDistance(from, to)
+float SimpleMesh::getHeuristic(const Point2D& from, const Point2D& to) const {
+	return SimpleMesh::getDistance(from, to);
 }
 
-/* Not yet implemented. Want to test if rest of the stuff works. */
-bool SimpleMesh::isVisible(const Point2D& from, const Point2D& to) {
+bool SimpleMesh::isVisible(const Point2D& from, const Point2D& to) const {
+//	if (from == to) {
+//		return true;
+//	}
+//	Point2D diff = to - from;
+//	int yfunc = [](int x){}
 	return true;
 }
 
-std::vector<Point2D> & SimpleMesh::getNeighbours(const Point2D &point) {
-	std::vector<Point2D> vec();
+std::vector<Point2D> SimpleMesh::getNeighbours(const Point2D &point) const {
+	std::vector<Point2D> vec;
 	vec.reserve(4);
 	Point2D top = point + Point2D(0, -1);
 	if (isAccessible(top)) {
@@ -82,19 +74,19 @@ std::vector<Point2D> & SimpleMesh::getNeighbours(const Point2D &point) {
 	return vec;
 }
 
-void SimpleMesh::getShape() {
+const Point2D & SimpleMesh::getShape() {
 	return d_shape;
 }
 
 void printMesh(const SimpleMesh &mesh) {
-	const char free = 177 //ascii char ▒
-	const char obstacle = 219 // ascii char █
+	const char free = 43; //ascii char +
+	const char obstacle = 219; // ascii char █
 	for (int y=0; y<mesh.d_shape.y; y++) {
 		for (int x=0; x<mesh.d_shape.x; x++) {
-			char out = mesh.d_data[y*mesh.d_shape.x + x] ? free : obstacle;
+			char out = mesh.d_data[y*mesh.d_shape.x + x] ? obstacle : free;
 			std::cout << out;
-		std::cout << std::endl;
 		}
+		std::cout << std::endl;
 	}
 }
 

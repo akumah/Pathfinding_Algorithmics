@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <unordered_set>
 #include "simple_mesh.hpp"
 
 using namespace std;
@@ -53,6 +54,89 @@ bool test_Point2D_euclidean() {
 	return (result == expected);
 }
 
+/* Test creation of SimpleMesh.
+
+Tests creation, obstacle addition and removal and output.
+*/
+bool test_SimpleMesh_creation() {
+	SimpleMesh mesh(15, 10);
+	mesh.addObstacle(Point2D(3, 3), Point2D(8,5));
+	mesh.removeObstacle(Point2D(4, 4), Point2D(5, 3));
+	printMesh(mesh);
+	cout << endl;
+	return true; //Assume that reaching here is success. Validate output visually.
+}
+
+bool test_SimpleMesh_getShape() {
+	SimpleMesh mesh(15, 10);
+	return (mesh.getShape() == Point2D(15, 10));
+}
+
+void test_SimpleMesh_isAccessible() {
+	SimpleMesh mesh(15, 10);
+
+	cout << "\t\tTesting bounds checking:" << endl;
+	/* Check that out-of-bounds checking works */
+	Point2D point(0, 0);
+	cout << "\t\t" << point << " : " << mesh.isAccessible(point) << endl;
+	point = Point2D(14, 9);
+	cout << "\t\t" << point << " : " << mesh.isAccessible(point) << endl;
+	point = Point2D(-1, 0);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+	point = Point2D(15, 0);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+	point = Point2D(0, -1);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+	point = Point2D(0, 10);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+	point = Point2D(15, 10);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+	/* Check that obstacle checking works */
+	cout << "\t\tTesting obstacle checking:" << endl;
+	mesh.addObstacle(Point2D(0,0), Point2D(1,1));
+	point = Point2D(0, 0);
+	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;
+}
+
+void test_SimpleMesh_getDistance() {
+	SimpleMesh mesh(15, 10);
+	Point2D from(0, 0);
+	Point2D to(0, 0);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) == 0) << endl;
+	to = Point2D(-1, 0);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) == 1) << endl;
+	to = Point2D(1, 0);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) == 1) << endl;
+	to = Point2D(0, -1);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) == 1) << endl;
+	to = Point2D(0, 1);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) == 1) << endl;
+	to = Point2D(1, 1);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) - 1.414213562 < 0.00001) << endl;
+	to = Point2D(-1, -1);
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) - 1.414213562 < 0.00001) << endl;
+	to = Point2D(-2, -4);  //Point2D euclideanDist
+	cout << "\t\t" << from << to << " : " << (mesh.getDistance(from, to) - 4.472135954 < 0.00001) << endl;
+}
+
+bool test_SimpleMesh_getHeuristic() {
+	SimpleMesh mesh(15, 10);
+	Point2D from(0, 0);
+	Point2D to(-2, -4);
+	return (mesh.getDistance(from, to) - 4.472135954 < 0.00001);
+}
+
+bool test_SimpleMesh_getNeighbours() {
+	SimpleMesh mesh(15, 10);
+	mesh.addObstacle(Point2D(0, 1), Point2D(1,1));
+	std::vector<Point2D> expected1({Point2D(1, 0)});
+	std::vector<Point2D> neighbours1(mesh.getNeighbours(Point2D(0, 0)));
+	std::vector<Point2D> expected2({Point2D(6, 4), Point2D(6, 6), Point2D(5, 5), Point2D(7, 5)});
+	std::vector<Point2D> neighbours2(mesh.getNeighbours(Point2D(6, 5)));
+	return (expected1 == neighbours1 && expected2 == neighbours2);
+
+}
+
 int main(){
     cout << "Testing Point2D:" << endl;
 	cout << "\tPoint2D output: " << test_Point2D_out() << endl;
@@ -62,4 +146,16 @@ int main(){
 	cout << "\tPoint2D add: " << test_Point2D_add() << endl;
 	cout << "\tPoint2D manhattanDist: " << test_Point2D_manhattan() << endl;
 	cout << "\tPoint2D euclideanDist: " << test_Point2D_euclidean() << endl;
+	cout << "Done Point2D.\n" << endl;
+
+	cout << "Testing SimpleMesh:" << endl;
+	cout << "\tSimpleMesh creation: " << test_SimpleMesh_creation() << endl;
+	cout << "\tSimpleMesh creation: " << test_SimpleMesh_getShape() << endl;
+	cout << "\tSimpleMesh isAccessible:" << endl;
+	test_SimpleMesh_isAccessible();
+	cout << "\tSimpleMesh getDistance:" << endl;
+	test_SimpleMesh_getDistance();
+	cout << "\tSimpleMesh getHeuristic: " << test_SimpleMesh_getHeuristic() << endl;
+	cout << "\tSimpleMesh getNeighbours: " << test_SimpleMesh_getNeighbours() << endl;
+
 }

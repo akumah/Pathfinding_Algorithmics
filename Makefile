@@ -11,13 +11,13 @@ DEP_FILES   :=  $(OBJ_FILES:.o=.d)
 
 #Linker flags
 #LDLIBS      :=  -lpng -lstdc++ -lGL -lGLU -lGLEW -lSDLmain -lSDL -lgomp
-#LDFLAGS     :=  -L/usr/local/lang/NVIDIA_GPU_Computing_SDK/sdk/C/common/lib/linux/
+LDFLAGS     :=  -g
 
 # Preprocessor flags
 # -MMD and -MP handle dependency generation
 CPPFLAGS	:=  -MMD -MP -I $(INC_DIR)
 # Compiler flags
-CXXFLAGS	:=  -Wall -std=c++14
+CXXFLAGS	:=  -Wall -std=c++14 -g
 
 .PHONY: all clean
 
@@ -33,7 +33,7 @@ clean:
 $(EXECUTABLE):  $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(BIN_DIR)/test_mesh.exe:  $(OBJ_DIR)/test_mesh.o | $(BIN_DIR)
+$(BIN_DIR)/test_mesh.exe:  $(OBJ_DIR)/test_mesh.o $(OBJ_DIR)/point2d.o $(OBJ_DIR)/simple_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # .o files are build from the corresponding .cpp files

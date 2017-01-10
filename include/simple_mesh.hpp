@@ -13,27 +13,33 @@ Optimized like a mule on a skating rink.
 */
 class SimpleMesh: public AnyAngleMesh {
 	std::valarray<bool> d_data;
-	Point2D d_shape;
+	const Point2D d_shape;  // This should not change, once initialized.
 public:
-	SimpleMesh(const int width, const int height);
-	SimpleMesh(const Point2D &shape);
-	~SimpleMesh();
+	SimpleMesh(const int width, const int height) :
+		d_data(width*height), d_shape(width, height) {};
+	SimpleMesh(const Point2D &shape) :
+		d_data(shape.x*shape.y), d_shape(shape) {};
+	~SimpleMesh() {};
+
+	/* Pure virtuals from the interface */
+	std::vector<Point2D> getNeighbours(const Point2D &point) const;
+	bool isAccessible(const Point2D& point) const;
+	float getDistance(const Point2D& from, const Point2D& to) const;
+	float getHeuristic(const Point2D& from, const Point2D& to) const;
+	bool isVisible(const Point2D& from, const Point2D& to) const;
+
 
 	/* Add rectangular obstacle */
-	void addObstacle(Point2D &org, Point2D &shape);
+	void addObstacle(const Point2D &org, const Point2D &shape);
 
 	/* Create hole in obstacle */
-	void removeObstacle(Point2D &org, Point2D &shape);
+	void removeObstacle(const Point2D &org, const Point2D &shape);
 
 	/* Get dimensions of the field */
-	Point2D & getShape();
-	friend void printMesh(SimpleMesh &mesh);
+	const Point2D & getShape();
+	friend void printMesh(const SimpleMesh &mesh);
 private:
-	void init(Point2D &shape);
-	void setSubRect(Point2D &org, Point2D &shape, int value);
+	void setSubRect(const Point2D &org, const Point2D &shape, int value);
 };
-
-/* Stream the mesh as char map to cout. Interface?*/
-void printMesh(SimpleMesh &mesh);
 
 #endif // SIMPLE_MESH_HPP_INCLUDED

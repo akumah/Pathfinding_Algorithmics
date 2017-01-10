@@ -1,8 +1,8 @@
 #ifndef POINT2D_HPP_INCLUDED
 #define POINT2D_HPP_INCLUDED
 
-#include <iostream>
 #include <cmath>  /* sqrt */
+#include <iostream>
 
 /* Maybe I should just use a valarray for it... */
 struct Point2D {
@@ -50,27 +50,14 @@ public:
 
 };
 
-int manhattanDist(const Point2D &diff) {
-	return abs(diff.x) + abs(diff.y);
-}
+int manhattanDist(const Point2D &diff);
 
-int manhattanDist(const Point2D &from, const Point2D &to) {
-	const Point2D diff = to - from;
-	return manhattanDist(diff);
-}
+int manhattanDist(const Point2D &from, const Point2D &to);
 
-float euclideanDist(const Point2D &diff) {
-	return float(sqrt(diff.x*diff.x + diff.y*diff.y));
-}
+float euclideanDist(const Point2D &diff);
 
-float euclideanDist(const Point2D &from, const Point2D &to) {
-	const Point2D diff = to - from;
-	return euclideanDist(diff);
-}
+float euclideanDist(const Point2D &from, const Point2D &to);
 
-std::ostream & operator<<(std::ostream &os, const Point2D &point) {
-	os << "(" << point.x << ", " << point.y << ")";
-	return os;
-};
+std::ostream & operator<<(std::ostream &os, const Point2D &point);
 
 #endif // POINT2D_HPP_INCLUDED
