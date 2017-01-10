@@ -39,6 +39,14 @@ public:
 		return Point2D(*this) -= other;
 	}
 
+	bool operator==(const Point2D &other) const {
+        return (x == other.x && y == other.y);
+    }
+
+    bool operator!=(const Point2D &other) const {
+        return !(x == other.x && y == other.y);
+    }
+
 
 };
 
@@ -47,7 +55,7 @@ int manhattanDist(const Point2D &diff) {
 }
 
 int manhattanDist(const Point2D &from, const Point2D &to) {
-	Point2D diff = to - from;
+	const Point2D diff = to - from;
 	return manhattanDist(diff);
 }
 

@@ -1,9 +1,9 @@
-EXECUTABLE	:=  bin/test_pathing.exe
-
 BIN_DIR		:=  bin
 SRC_DIR		:=  src
 OBJ_DIR		:=  obj
 INC_DIR		:=  include
+
+EXECUTABLE	:=  $(BIN_DIR)/final_app.txt
 
 SRC_FILES   :=  $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES   :=  $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
@@ -30,9 +30,10 @@ cleanwin:
 clean:
 	$(RM) -r $(OBJ_DIR) $(EXECUTABLE)
 
-# By default all object files are compiled for the executable. For now, only include ones necessary for testing.
-#$(EXECUTABLE):  $(OBJ_FILES)
-$(EXECUTABLE):  obj/test_pathing.o | $(BIN_DIR)
+$(EXECUTABLE):  $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(BIN_DIR)/test_mesh.exe:  $(OBJ_DIR)/test_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # .o files are build from the corresponding .cpp files
