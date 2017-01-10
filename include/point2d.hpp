@@ -6,12 +6,12 @@
 
 /* Maybe I should just use a valarray for it... */
 struct Point2D {
-	int x, y  // Public by default, as this is a struct
+	int x, y;  // Public by default, as this is a struct
 public:
 	Point2D() : x(0), y(0) {};
 	Point2D(const int x_in, const int y_in) : x(x_in), y(y_in) {};
 	Point2D(const Point2D &other) : x(other.x), y(other.y) {};
-	~Point2D();
+	~Point2D() {};
 
 	Point2D & operator=(const Point2D &other) {
 		x=other.x;
@@ -25,7 +25,7 @@ public:
 		return *this;
 	}
 
-	const Point2D & operator+(const Point2D &other) {
+	const Point2D & operator+(const Point2D &other) const {
 		return Point2D(*this) += other;
 	}
 
@@ -35,31 +35,34 @@ public:
 		return *this;
 	}
 
-	const Point2D & operator-(const Point2D &other) {
+	const Point2D & operator-(const Point2D &other) const {
 		return Point2D(*this) -= other;
 	}
 
 
 };
 
-public int manhattanDist(const Point2D &diff) {
+int manhattanDist(const Point2D &diff) {
 	return abs(diff.x) + abs(diff.y);
 }
 
-public int manhattanDist(const Point2D &from, const Point2D &to) {
+int manhattanDist(const Point2D &from, const Point2D &to) {
 	Point2D diff = to - from;
-	return manhattanDist(const Point2D &diff);
+	return manhattanDist(diff);
 }
 
-public float euclideanDist(const Point2D &diff) {
+float euclideanDist(const Point2D &diff) {
 	return float(sqrt(diff.x*diff.x + diff.y*diff.y));
 }
 
-public float euclideanDist(const Point2D &from, const Point2D &to) {
-	Point2D diff = to - from;
+float euclideanDist(const Point2D &from, const Point2D &to) {
+	const Point2D diff = to - from;
 	return euclideanDist(diff);
 }
 
-public std::ostream & operator<<(std::ostream &os, const &Point2D);
+std::ostream & operator<<(std::ostream &os, const Point2D &point) {
+	os << "(" << point.x << ", " << point.y << ")";
+	return os;
+};
 
 #endif // POINT2D_HPP_INCLUDED

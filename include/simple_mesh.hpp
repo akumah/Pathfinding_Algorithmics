@@ -27,13 +27,13 @@ public:
 
 	/* Get dimensions of the field */
 	Point2D & getShape();
-	friend void printMesh(SimpleMesh &mesh)
+	friend void printMesh(SimpleMesh &mesh);
 private:
-	void init(Point2d &shape);
+	void init(Point2D &shape);
 	void setSubRect(Point2D &org, Point2D &shape, int value);
 };
 
 /* Stream the mesh as char map to cout. Interface?*/
-public void printMesh(SimpleMesh &mesh);
+void printMesh(SimpleMesh &mesh);
 
 #endif // SIMPLE_MESH_HPP_INCLUDED

@@ -2,7 +2,7 @@
 #define GENERIC_MESH_HPP_INCLUDED
 
 #include <vector>
-#include "point2d.hpp
+#include "point2d.hpp"
 
 /* Interface for a generic 2D navmesh. */
 class GenericMesh {

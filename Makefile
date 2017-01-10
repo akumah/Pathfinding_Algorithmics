@@ -1,80 +1,49 @@
-#####################################################
-# You may need to change the parameters under here. #
-#####################################################
+EXECUTABLE	:=  bin/test_pathing.exe
 
+BIN_DIR		:=  bin
+SRC_DIR		:=  src
+OBJ_DIR		:=  obj
+INC_DIR		:=  include
 
-CXX=g++
+SRC_FILES   :=  $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES   :=  $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+DEP_FILES   :=  $(OBJ_FILES:.o=.d)
 
-# Set default compiler parameters
-# -Wall 	shows all warnings when compiling, always use this!
-# -std=c++11 	enables the C++11 standard mode
-CXXFLAGS = -Wall -std=c++14
+#Linker flags
+#LDLIBS      :=  -lpng -lstdc++ -lGL -lGLU -lGLEW -lSDLmain -lSDL -lgomp
+#LDFLAGS     :=  -L/usr/local/lang/NVIDIA_GPU_Computing_SDK/sdk/C/common/lib/linux/
 
-# Step 2: If you use clang++ under Mac OS X, remove these comments
-#CXXFLAGS += -stdlib=libc++
-#LFLAGS += -stdlib=libc++
+# Preprocessor flags
+# -MMD and -MP handle dependency generation
+CPPFLAGS	:=  -MMD -MP -I $(INC_DIR)
+# Compiler flags
+CXXFLAGS	:=  -Wall -std=c++14
 
-# Step 3: Run 'make' in the same directory as this file
+.PHONY: all clean
 
+all:    $(EXECUTABLE)
 
-############################
-# Settings for the library #
-############################
-
-
-# Compiler flag -Idir specifies, that there are includes in the 'dir' directory
-LIB_CXXFLAGS = $(CXXFLAGS) -Iinclude
-
-# List of objects for the library
-LIBOBJS = obj/test_tstar.o obj/tstar_algo.o
-
-# Name of the library
-LIBRARY = lib/libpath.a
-
-################################
-# Settings for the testing app #
-################################
-
-# Compiler flags for the testing app
-APP_CXXFLAGS = $(CXXFLAGS) -Iinclude
-
-# Linker flags (order the compiler to link with our library)
-LFLAGS += -Llib -lpath
-
-# The object for the testing app
-TESTOBJS = obj/test_tstar.o
-
-
-# The name of the testing app
-TESTAPP = bin/test_tstar.exe
-
-# This is the first target. It will be built when you run 'make' or 'make build'
-build: $(LIBRARY) $(TESTAPP)
-# Create the library by using 'ar'
-$(LIBRARY) : $(LIBOBJS)
-	ar cr $(LIBRARY) $(LIBOBJS)
-
-# Compile each source file of the librar
-obj/tstar_algo.o: src/tstar_algo.cpp
-	$(CXX) $(LIB_CXXFLAGS) -c src/tstar_algo.cpp -o obj/tstar_algo.o
-
-obj/test_tstar.o: src/test_tstar.cpp
-	$(CXX) $(APP_CXXFLAGS) -c src/test_tstar.cpp -o obj/test_tstar.o 	
-
-	
-# Rule for linking the test app with our library
-$(TESTAPP): $(TESTOBJS) $(LIBRARY)
-	$(CXX) $(TESTOBJS) -o $(TESTAPP) $(LFLAGS) 
-	
-# Compile each source file of the library
-
-
-doc:
-	doxygen
+# Windows doesn't have rm. Damn windows.
+cleanwin:
+	del /Q $(OBJ_DIR) $(EXECUTABLE)
 
 clean:
-	rm -rf $(LIBOBJS)
-	rm -rf $(TESTOBJS)
-	rm -rf $(LIBRARY)
-	rm -rf $(TESTAPP)
-	rm -rf docs
+	$(RM) -r $(OBJ_DIR) $(EXECUTABLE)
+
+# By default all object files are compiled for the executable. For now, only include ones necessary for testing.
+#$(EXECUTABLE):  $(OBJ_FILES)
+$(EXECUTABLE):  obj/test_pathing.o | $(BIN_DIR)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+# .o files are build from the corresponding .cpp files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp| $(OBJ_DIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
+
+# If output directory is missing, create it.
+$(OBJ_DIR) $(BIN_DIR):
+	mkdir $@
+
+# Causes dependency files to be read in.
+ifneq "$(MAKECMDGOALS)" ""
+-include $(DEP_FILES)
+endif
