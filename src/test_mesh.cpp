@@ -4,6 +4,12 @@
 #include "simple_mesh.hpp"
 
 using namespace std;
+void print_header() {
+	cout << "\n\t\tSIMPLE_MESH TEST\n" << endl;
+	cout << "All tests should print 1 if successful." << endl;
+	cout << "When mesh graphic is output, it needs visual confirmation.\n\n" << endl;
+}
+
 bool test_Point2D_out() {
     Point2D point(3,2);
 	cout << point << endl;
@@ -56,7 +62,7 @@ bool test_Point2D_euclidean() {
 
 /* Test creation of SimpleMesh.
 
-Tests creation, obstacle addition and removal and output.
+Tests creation, obstacle addition and removal, getArrayValue and output.
 */
 bool test_SimpleMesh_creation() {
 	SimpleMesh mesh(15, 10);
@@ -134,10 +140,51 @@ bool test_SimpleMesh_getNeighbours() {
 	std::vector<Point2D> expected2({Point2D(6, 4), Point2D(6, 6), Point2D(5, 5), Point2D(7, 5)});
 	std::vector<Point2D> neighbours2(mesh.getNeighbours(Point2D(6, 5)));
 	return (expected1 == neighbours1 && expected2 == neighbours2);
+}
+
+void test_SimpleMesh_isVisible() {
+	SimpleMesh mesh(15, 10);
+	mesh.addObstacle(Point2D(3,3), Point2D(1,3));
+	mesh.addObstacle(Point2D(0,7), Point2D(3,1));
+	printMesh(mesh);
+	Point2D from(2, 5);
+	Point2D to(2, 5);
+	cout << "\t\tSelf-visibility" << endl;
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+	from = Point2D(3, 5);
+	to = Point2D(3, 5);
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+	cout << "\t\tNon-accessible" << endl;
+	from = Point2D(2, 5);
+	to = Point2D(-2, 5);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	to = Point2D(3, 5);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	cout << "\t\tObstacle visibility" << endl;
+	to = Point2D(4, 4);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	to = Point2D(4, 6);
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+	to = Point2D(1, 8);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	to = Point2D(3, 8);
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+	cout << "\t\tObstacle visibility" << endl;
+	from = Point2D(4, 4);
+	to = Point2D(2, 5);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	from = Point2D(4, 6);
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+	from = Point2D(1, 8);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	from = Point2D(3, 8);
+	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
+
 
 }
 
 int main(){
+	print_header();
     cout << "Testing Point2D:" << endl;
 	cout << "\tPoint2D output: " << test_Point2D_out() << endl;
 	cout << "\tPoint2D equality: " << test_Point2D_equality() << endl;
@@ -150,12 +197,14 @@ int main(){
 
 	cout << "Testing SimpleMesh:" << endl;
 	cout << "\tSimpleMesh creation: " << test_SimpleMesh_creation() << endl;
-	cout << "\tSimpleMesh creation: " << test_SimpleMesh_getShape() << endl;
+	cout << "\tSimpleMesh getShape: " << test_SimpleMesh_getShape() << endl;
 	cout << "\tSimpleMesh isAccessible:" << endl;
 	test_SimpleMesh_isAccessible();
 	cout << "\tSimpleMesh getDistance:" << endl;
 	test_SimpleMesh_getDistance();
 	cout << "\tSimpleMesh getHeuristic: " << test_SimpleMesh_getHeuristic() << endl;
 	cout << "\tSimpleMesh getNeighbours: " << test_SimpleMesh_getNeighbours() << endl;
+	cout << "\tSimpleMesh isVisible:" << endl;
+	test_SimpleMesh_isVisible();
 
 }

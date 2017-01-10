@@ -4,10 +4,22 @@
 #include <valarray>
 #include "generic_mesh.hpp"
 
+/* Since the STL doesn't include one: sgn function
+Courtesy of user79758, http://stackoverflow.com/a/4609795/3745323
+*/
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 /* Simple 4-connected rectangular 2D mesh with obstacles.
 
 Obstacles can be boolean combinations of non-rotated rect-
-angles with non-negative width and height.
+angles with non-negative width and height. The locations define
+the edges of the obstacle.
+
+For getNeighbours, isVisible etc. there is asymmetry in that
+starting from the edge of an obstacle is possible, but finishing there
+is not.
 
 Optimized like a mule on a skating rink.
 */
@@ -37,9 +49,12 @@ public:
 
 	/* Get dimensions of the field */
 	const Point2D & getShape();
+	bool isInBounds(const Point2D &point) const;
 	friend void printMesh(const SimpleMesh &mesh);
 private:
 	void setSubRect(const Point2D &org, const Point2D &shape, int value);
+	bool getArrayValue(const int x, const int y) const;
+	bool getArrayValue(const Point2D &point) const;
 };
 
 #endif // SIMPLE_MESH_HPP_INCLUDED
