@@ -27,10 +27,10 @@ all:    $(EXECUTABLE)
 
 # Windows doesn't have rm. Damn windows.
 cleanwin:
-	del /Q $(OBJ_DIR) $(EXECUTABLE)
+	del /Q $(OBJ_DIR) $(BIN_DIR)
 
 clean:
-	$(RM) -r $(OBJ_DIR) $(EXECUTABLE)
+	$(RM) -r $(OBJ_DIR) $(BIN_DIR)
 
 $(EXECUTABLE):  $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
@@ -41,6 +41,9 @@ $(BIN_DIR)/test_simple_mesh.exe:  test_simple_mesh.o point2d.o simple_mesh.o | $
 $(BIN_DIR)/test_jump_mesh.exe:  test_jump_mesh.o point2d.o jump_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
+$(BIN_DIR)/test_tstar.exe:  Test_tstar.o tstar_algo.o simple_mesh.o point2d.o | $(BIN_DIR)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@	
+	
 # .o files are build from the corresponding .cpp files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp| $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
