@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
 	auto begin = std::chrono::high_resolution_clock::now();
 
 	vector<Point2D> result;
-	Point2D initpoint = {1,1};
-	Point2D endpoint = {3,3};
+	Point2D initpoint = {5,5};
+	Point2D endpoint = {9,9};
 	
 	
 	SimpleMesh mesh(15, 10);

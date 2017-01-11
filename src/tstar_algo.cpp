@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <climits>
 #include <unordered_map>
+#include <list>
 using namespace std; /* Nimeruumi valik (selgitatakse praktikumis) */
 
 
@@ -70,33 +71,47 @@ grid::grid(bool[][] coords){
 grid::isBlocked(int x, int y)
 */
 
-void tstar_UpdateVertex (vertex_s temp_s, vertex_s near_s, SimpleMesh meshgrid, vector<vertex_s>* open){
-	int g_old = near_s.get_gvalue();
+void tstar_UpdateVertex (vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, vector<vertex_s>* open){
+	int g_old = near_s->get_gvalue();
+	printf("X value is test_updatevertex: %d \n ",temp_s->x);
+	
+	
 	tstar_ComputeCost(temp_s, near_s, meshgrid);
-	if (near_s.get_gvalue() < g_old){
+	printf("gvalue test: %d \n ", near_s->get_gvalue());
+	printf("gold test: %d \n ", g_old);
+	
+	if (near_s->get_gvalue() < g_old){
 		
 		vector<vertex_s>::iterator it;
-		it = std::find((*open).begin(), (*open).end(),near_s);
+		it = std::find((*open).begin(), (*open).end(),*near_s);
 		if (it!=(*open).end()){
 			//TO-DO Replace with something more beautiful
 			(*open).erase(it);
+			printf("smalleropen");
 		}
-		(*open).push_back(near_s);
+		printf("biggeropen");
+		(*open).push_back(*near_s);
 	}
 }
 
-void tstar_ComputeCost (vertex_s s0, vertex_s s1, SimpleMesh meshgrid ){
-	if (tstar_lineofsight( (*s0.get_parent()), s1, meshgrid)){
-		if ((*s0.get_parent()).get_gvalue()+meshgrid.getDistance((*s0.get_parent()).get_point(), s1.get_point()) < s1.get_gvalue()){
+void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
+	vertex_s* aword = s0->get_parent();
+	printf("here is fine right \n");
+	printf("X value is test Computecost: %d \n ",s0->x);
+	
+	
+	if (tstar_lineofsight(*aword, *s1, meshgrid)){
+		
+		if (((*s0).get_parent())->get_gvalue()+meshgrid.getDistance(((*s0).get_parent())->get_point(), s1->get_point()) < s1->get_gvalue()){
 			
-			s1.set_parent((s0.get_parent()));
-			s1.set_gvalue((*s0.get_parent()).get_gvalue()+meshgrid.getDistance((*s0.get_parent()).get_point(), s1.get_point()));
+			s1->set_parent(((*s0).get_parent()));
+			s1->set_gvalue(((*s0).get_parent())->get_gvalue()+meshgrid.getDistance(((*s0).get_parent())->get_point(), s1->get_point()));
 		}
 	}
 	else{
-		if ((s0.get_gvalue() + meshgrid.getDistance(s0.get_point(), s1.get_point()))< s1.get_gvalue()){
-			s1.set_parent(&s0);
-			s1.set_gvalue(s0.get_gvalue() + meshgrid.getDistance(s0.get_point(), s1.get_point()));
+		if ((s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point()))< s1->get_gvalue()){
+			s1->set_parent(s0);
+			s1->set_gvalue(s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point()));
 		}
 	}
 }
@@ -107,48 +122,63 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 	vector<Point2D> neighbours;
 	vertex_s s_start = vertex_s(initpoint);
 	vertex_s s_goal = vertex_s(endpoint);
-	vertex_s temp_s;
-	vertex_s near_s;
 	Point2D point_near_s;
-	
+	vector<vertex_s> vectorvertex;
 	//unordered_map<vertex_s,vertex_s> parentmap;
 	s_start.set_gvalue(0);
 	s_start.set_parent(&s_start);
 	//parentmap.insert(s_start,s_start);
 	open.push_back(s_start);
 	while (!open.empty()){
-		temp_s = open.back();
+		vertex_s* temp_s = new vertex_s;
+		temp_s = &open.back();
+		vectorvertex.push_back(*temp_s);
 		open.pop_back();
-		if (temp_s.get_point() == s_goal.get_point()){
+		printf("The results: %d , %d \n" ,temp_s->get_point().x,temp_s->get_point().y );
+			
+		if (temp_s->get_point() == s_goal.get_point()){
 			printf("path found");
 			/*while temp.
 			result = temp_s.get_result();
 			*/
 			return result;
 		}
-		closed.push_back(temp_s);
-		neighbours = meshgrid.getNeighbours(temp_s.get_point());
+		closed.push_back(*temp_s);
+		neighbours = meshgrid.getNeighbours(temp_s->get_point());
 		while (!neighbours.empty()){
+			
+			
 			point_near_s = neighbours.back();
 			neighbours.pop_back();
-			near_s.set_point(point_near_s);
+			
+			vertex_s* near_s = new vertex_s;
+			vectorvertex.push_back(*near_s);
+			near_s->set_point(point_near_s);
+			//near_s->set_gvalue(meshgrid.getDistance(near_s->get_point(),temp_s->get_point()));
 			//TO-DO Remove inverted logic, replace != with ==
-			if ((std::find(closed.begin(), closed.end(),near_s)!=closed.end())){
-				if (find(open.begin(), open.end(),near_s)!=open.end()){
+			if ((std::find(closed.begin(), closed.end(),*near_s)==closed.end())){
+				if (find(open.begin(), open.end(),*near_s)==open.end()){
+					printf("changing here");
+					near_s->set_gvalue(1000);
+					near_s->set_parent(nullptr);
+			
 				}
-				else{
-					near_s.set_gvalue(INT_MAX);
-				}
-			}
-			else{
 				tstar_UpdateVertex(temp_s,near_s,meshgrid, &open);
 			}
 		}
 	}
+	printf("result not found");
 	return result;
 }
 bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid){
+	
+	printf("fuck this fucntion \n");
+	printf("X value is test lineofsight: %d \n ",s0.x);
+
+	
 	int x0; int y0; int x1; int y1; int dx; int dy; int sx; int sy; int f;
+	
+	
 	
 	x0 = s0.x;
 	y0 = s0.y;
@@ -181,14 +211,14 @@ bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid){
 				if (!meshgrid.isAccessible({x0+((sx-1)/2),y0+((sy-1)/2)})){
 					return false;
 					}
-				x0 = x0+sx;
-				f = f-dy;
+				y0 = y0+sy;
+				f = f-dx;
 			}
 			
 			if ((f != 0) and (!meshgrid.isAccessible({x0+((sx-1)/2),y0+((sy-1)/2)}))){
 				return false;
 			}
-			if ((dx = 0) and (!meshgrid.isAccessible({x0+((sx-1)/2),y0})) and (!meshgrid.isAccessible({x0+((sx-1)/2),y0-1}))){
+			if ((dy = 0) and (!meshgrid.isAccessible({x0+((sx-1)/2),y0})) and (!meshgrid.isAccessible({x0+((sx-1)/2),y0-1}))){
 				return false;
 			} 
 			x0 = x0 + sx;
@@ -211,7 +241,7 @@ bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid){
 			if ((dx = 0) and (!meshgrid.isAccessible({x0,y0+((sy-1)/2)})) and (!meshgrid.isAccessible({x0-1,y0+((sy-1)/2)}))){
 				return false;
 			} 
-			x0 = x0 + sx;
+			y0 = y0 + sy;
 			}
 		}
 	return true;
