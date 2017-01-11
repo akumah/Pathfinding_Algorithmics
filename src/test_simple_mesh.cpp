@@ -66,7 +66,7 @@ Tests creation, obstacle addition and removal, getArrayValue and output.
 */
 bool test_SimpleMesh_creation() {
 	SimpleMesh mesh(15, 10);
-	mesh.addObstacle(Point2D(3, 3), Point2D(8,5));
+	mesh.addObstacle({3, 3}, {8, 5});  // Implicit constructor of Point2D in arguments.
 	mesh.removeObstacle(Point2D(4, 4), Point2D(5, 3));
 	printMesh(mesh);
 	cout << endl;
@@ -85,7 +85,7 @@ void test_SimpleMesh_isAccessible() {
 	/* Check that out-of-bounds checking works */
 	Point2D point(0, 0);
 	cout << "\t\t" << point << " : " << mesh.isAccessible(point) << endl;
-	point = Point2D(14, 9);
+	point = {14, 9};  // Implicit constructor again
 	cout << "\t\t" << point << " : " << mesh.isAccessible(point) << endl;
 	point = Point2D(-1, 0);
 	cout << "\t\t" << point << " : " << !mesh.isAccessible(point) << endl;

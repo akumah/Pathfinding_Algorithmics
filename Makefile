@@ -3,6 +3,8 @@ SRC_DIR		:=  src
 OBJ_DIR		:=  obj
 INC_DIR		:=  include
 
+vpath %.o $(OBJ_DIR)
+
 EXECUTABLE	:=  $(BIN_DIR)/final_app.txt
 
 SRC_FILES   :=  $(wildcard $(SRC_DIR)/*.cpp)
@@ -33,7 +35,10 @@ clean:
 $(EXECUTABLE):  $(OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(BIN_DIR)/test_mesh.exe:  $(OBJ_DIR)/test_mesh.o $(OBJ_DIR)/point2d.o $(OBJ_DIR)/simple_mesh.o | $(BIN_DIR)
+$(BIN_DIR)/test_simple_mesh.exe:  test_simple_mesh.o point2d.o simple_mesh.o | $(BIN_DIR)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(BIN_DIR)/test_jump_mesh.exe:  test_jump_mesh.o point2d.o jump_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # .o files are build from the corresponding .cpp files
