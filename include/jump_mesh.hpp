@@ -28,12 +28,11 @@ public:
 		d_vert.insert({org.x - 1, org.x + shape.x + 1});
 		d_hor.insert({org.y - 1, org.y + shape.y +1});
 	};
-	void removeObstacle(const Point2D &org, const Point2D &shape) {
+	void removeObstacle(const Point2D &, const Point2D &) {
 		std::cerr << "WARNING: JumpMesh does not support obstacle removal!" << std::endl;
 	}
 
 	std::vector<Point2D> getNeighbours(const Point2D &point) const;
-	float getHeuristic(const Point2D& from, const Point2D& to) const;
 };
 
 #endif // JUMP_MESH_HPP_INCLUDED

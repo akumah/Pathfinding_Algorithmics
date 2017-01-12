@@ -140,12 +140,12 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 	//printf("%d %d \n", aword->get_point().x,aword->get_point().y);
 	//printf("%d %d \n", s1->get_point().x,s1->get_point().y);
 
-	
+
 	//if (tstar_lineofsight(*aword, *s1, meshgrid)){
 	if (meshgrid.isVisible(aword->get_point(), s1->get_point())){
 		if (aword->get_gvalue()+meshgrid.getDistance(aword->get_point(), s1->get_point()) < s1->get_gvalue()){
-			
-			
+
+
 			std::unordered_map<Point2D,vertex_s>::iterator it;
 			s1->set_parent(aword);
 			it = parentmap->find(s0->get_parent()->get_point());
@@ -158,7 +158,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 				it->second = vertex_s(s1->get_point());
 			}
 			//std::cerr << "if" << s1->get_point() << std::endl;
-			/*if (!parenttest){ 
+			/*if (!parenttest){
 				parentmap->erase(it);
 				parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
 			}*/
@@ -178,7 +178,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 				it->second = *s0;
 			}
 			/*
-			if (!parenttest){ 
+			if (!parenttest){
 				parentmap->erase(it);
 				parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
 			}*/
@@ -212,7 +212,7 @@ std::unordered_map<Point2D,vertex_s>::iterator it;
 			it->second = *s0;
 		}
 		/*
-		if (!parenttest){ 
+		if (!parenttest){
 			parentmap->erase(it);
 			parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
 		}*/
@@ -258,7 +258,7 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			temporary_vertex = *temp_s.get_parent();
 			//cout << temporary_vertex.get_point().x << " , " << temporary_vertex.get_point().y << endl;
 			cout << temp_s.get_point().x << " , " << temp_s.get_point().y << endl;
-			
+
 			std::unordered_map<Point2D,vertex_s>::iterator it;
 			//std::cerr << "temp_s: " << temp_s.get_point() << std::endl;
 			it = parentmap.find(temporary_vertex.get_point());
@@ -268,23 +268,23 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			while (true){
 				std::unordered_map<Point2D,vertex_s>::iterator it;
 				//cout << "iterator test " << temporary_vertex.get_point().x << " , " << temporary_vertex.get_point().y << endl;
-	
+
 				it = parentmap.find(temporary_vertex.get_point());
-				
+
 				if (it != parentmap.end()){
 					//cout << "iterator test " << it->second.get_point().x << " , " << it->second.get_point().y << endl;
 					temporary_vertex.set_point(it->second.get_point());
 				}
 				if (pointholder.x == temporary_vertex.get_point().x and pointholder.y == temporary_vertex.get_point().y){
 					break;}
-				
-				distance = distance + meshgrid.getDistance(temporary_vertex.get_point(), pointholder); 
-				
+
+				distance = distance + meshgrid.getDistance(temporary_vertex.get_point(), pointholder);
+
 				pointholder = temporary_vertex.get_point();
 				printf("The results: %d , %d \n", pointholder.x, pointholder.y);
 
 			}
-			
+
 			/*
 			printf("%d %d \n", temp_s.get_point().x,temp_s.get_point().y);
 
@@ -374,7 +374,7 @@ vector<Point2D> astar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			temporary_vertex = *temp_s.get_parent();
 			//cout << temporary_vertex.get_point().x << " , " << temporary_vertex.get_point().y << endl;
 			cout << temp_s.get_point().x << " , " << temp_s.get_point().y << endl;
-			
+
 			std::unordered_map<Point2D,vertex_s>::iterator it;
 			//std::cerr << "temp_s: " << temp_s.get_point() << std::endl;
 			it = parentmap.find(temporary_vertex.get_point());
@@ -384,22 +384,22 @@ vector<Point2D> astar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			while (true){
 				std::unordered_map<Point2D,vertex_s>::iterator it;
 				//cout << "iterator test " << temporary_vertex.get_point().x << " , " << temporary_vertex.get_point().y << endl;
-	
+
 				it = parentmap.find(temporary_vertex.get_point());
-				
+
 				if (it != parentmap.end()){
 					//cout << "iterator test " << it->second.get_point().x << " , " << it->second.get_point().y << endl;
 					temporary_vertex.set_point(it->second.get_point());
 				}
 				if (pointholder.x == temporary_vertex.get_point().x and pointholder.y == temporary_vertex.get_point().y){
 					break;}
-				distance = distance + meshgrid.getDistance(temporary_vertex.get_point(), pointholder); 
+				distance = distance + meshgrid.getDistance(temporary_vertex.get_point(), pointholder);
 				cout << distance << endl;
 				pointholder = temporary_vertex.get_point();
 				printf("The results: %d , %d \n", pointholder.x, pointholder.y);
 
 			}
-			
+
 			/*
 			printf("%d %d \n", temp_s.get_point().x,temp_s.get_point().y);
 
