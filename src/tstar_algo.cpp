@@ -166,7 +166,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 		}
 	}
 	else{
-		if ((s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point()))< s1->get_gvalue()){
+		if (s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point())< s1->get_gvalue()){
 			//printf("parent change2\n");
 			std::unordered_map<Point2D,vertex_s>::iterator it;
 			s1->set_parent(s0);
@@ -175,7 +175,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 				parentmap->emplace(pair<Point2D,vertex_s>(s1->get_point(), *s0));
 			}
 			else{
-				it->second = *s0;
+				it->second = vertex_s(s1->get_point());
 			}
 			/*
 			if (!parenttest){
@@ -204,12 +204,12 @@ std::unordered_map<Point2D,vertex_s>::iterator it;
 		//printf("parent change2\n");
 		std::unordered_map<Point2D,vertex_s>::iterator it;
 		s1->set_parent(s0);
-		it = parentmap->find(s0->get_parent()->get_point());
+		it = parentmap->find(s0->get_point());
 		if (it != parentmap->end()){
 			parentmap->emplace(pair<Point2D,vertex_s>(s1->get_point(), *s0));
 		}
 		else{
-			it->second = *s0;
+			it->second = vertex_s(s1->get_point());
 		}
 		/*
 		if (!parenttest){
