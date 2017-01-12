@@ -72,12 +72,12 @@ grid::grid(bool[][] coords){
 
 grid::isBlocked(int x, int y)
 */
-void tstar_UpdateVertex (vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap){
+void tstar_UpdateVertex (unordered_map<Point2D,vertex_s>* parentmap,vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap){
 	int g_old = near_s->get_gvalue();
 	//printf("%d %d \n", temp_s->get_point().x,temp_s->get_point().y);
 	//printf("%d %d \n", near_s->get_point().x,near_s->get_point().y);
 					
-	tstar_ComputeCost(temp_s, near_s, meshgrid);
+	tstar_ComputeCost(parentmap,temp_s, near_s, meshgrid);
 	//printf("gvalue test: %d \n ", near_s->get_gvalue());
 	//printf("gold test: %d \n ", g_old);
 	
@@ -98,7 +98,7 @@ void tstar_UpdateVertex (vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, Si
 
 
 
-void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
+void tstar_ComputeCost (unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
 	vertex_s* aword = s0->get_parent();
 	//printf("here is fine right \n");
 	//printf("X value is test Computecost: %d \n ",s0->x);
@@ -107,9 +107,11 @@ void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
 	if (tstar_lineofsight(*aword, *s1, meshgrid)){
 		
 		if (((*s0).get_parent())->get_gvalue()+meshgrid.getDistance(((*s0).get_parent())->get_point(), s1->get_point()) < s1->get_gvalue()){
-			
+		
 			//printf("parent change\n");
 			s1->set_parent(((*s0).get_parent()));
+			parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
+	
 			s1->set_gvalue(((*s0).get_parent())->get_gvalue()+meshgrid.getDistance(((*s0).get_parent())->get_point(), s1->get_point()));
 		}
 	}
@@ -117,6 +119,8 @@ void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
 		if ((s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point()))< s1->get_gvalue()){
 			//printf("parent change2\n");
 			s1->set_parent(s0);
+			parentmap->emplace(pair<Point2D,vertex_s>(s0->get_point(), *s1));
+	
 			s1->set_gvalue(s0->get_gvalue() + meshgrid.getDistance(s0->get_point(), s1->get_point()));
 		}
 	}
@@ -129,17 +133,17 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 	vertex_s s_start = vertex_s(initpoint);
 	vertex_s s_goal = vertex_s(endpoint);
 	vertex_s temp_s;
-	//vertex_s near_s;
+	vertex_s near_s;
 	bool check;
 	
-	//unordered_set<vertex_s> vertex_collection;
+	//unordered_set<vertex_s> vertex_collectionf;
 	Point2D point_near_s;
 	vector<vertex_s> vectorvertex;
-	//unordered_map<Point2D,vertex_s,myhash()> parentmap;
+	unordered_map<Point2D,vertex_s> parentmap;
 	map<float,vertex_s> openmap;
 	s_start.set_gvalue(0);
 	s_start.set_parent(&s_start);
-	//parentmap.insert(pair<Point2D,vertex_s>(initpoint, s_start));
+	parentmap.emplace(pair<Point2D,vertex_s>(initpoint, s_start));
 	//parentmap.insert(s_start,s_start);
 	openmap.insert(pair<float,vertex_s>(s_start.get_gvalue()+meshgrid.getDistance(s_start.get_point(), s_goal.get_point()), s_start ));
 	while (!openmap.empty()){
@@ -148,10 +152,33 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 		temp_s = openmap.begin()->second;
 		vectorvertex.push_back(temp_s);
 		openmap.erase(it);
-		printf("The results: %d , %d \n" ,temp_s.get_point().x,temp_s.get_point().y );
+		//printf("The results: %d , %d \n" ,temp_s.get_point().x,temp_s.get_point().y );
 		
 		if (temp_s.get_point() == s_goal.get_point()){
+			
+			
 			printf("Path is:");
+			vertex_s temporary_vertex;
+			Point2D pointholder; 
+			
+			std::unordered_map<Point2D,vertex_s>::iterator it;
+			it = parentmap.find(temp_s.get_point());
+			it->second.get_point();
+					
+			/*while (true){
+				std::unordered_map<Point2D,vertex_s>::iterator it;
+				it = parentmap.find(temp_s.get_point());
+				
+				temporary_vertex.set_point(it->second.get_point());
+				
+				if (pointholder.x == temporary_vertex.get_point().x and pointholder.y == temporary_vertex.get_point().y){
+					break;}
+				pointholder = temporary_vertex.get_point();
+				printf("The results: %d , %d \n", pointholder.x, pointholder.y);
+					
+			}
+			*/
+			/*
 			printf("%d %d \n", temp_s.get_point().x,temp_s.get_point().y);
 			
 			temp_s = *temp_s.get_parent();
@@ -159,7 +186,7 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			
 			temp_s = *temp_s.get_parent();
 			printf("%d %d \n", temp_s.get_point().x,temp_s.get_point().y);
-			
+			*/
 			return result;
 		}
 		closed.push_back(temp_s);
@@ -173,7 +200,7 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 			printf("%d %d \n", temp_s.get_point().x,temp_s.get_point().y);
 			printf("%d %d \n", point_near_s.x,point_near_s.y);
 			*/
-			vertex_s near_s(point_near_s);
+			near_s.set_point(point_near_s);
 			vectorvertex.push_back(near_s);
 			//near_s.set_point(point_near_s);
 			near_s.set_gvalue(meshgrid.getDistance(near_s.get_point(),temp_s.get_point()));
@@ -187,11 +214,11 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 				}
 				if (check == true){
 					//printf("changing here");
-					near_s.set_gvalue(INT_MAX);
+					near_s.set_gvalue(INT_MAX);					
 					near_s.set_parent(nullptr);
 				}
 				
-				tstar_UpdateVertex(s_goal, &temp_s,&near_s,meshgrid, &openmap);
+				tstar_UpdateVertex(&parentmap, s_goal, &temp_s,&near_s,meshgrid, &openmap);
 			}
 		}
 	}

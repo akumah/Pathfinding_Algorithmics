@@ -5,6 +5,7 @@
 #include "simple_mesh.hpp"
 #include "point2d.hpp"
 #include <map>
+#include <unordered_map>
 using namespace std;
 class vertex_s{
 
@@ -41,7 +42,7 @@ class vertex_s{
 };
 
 
-void tstar_UpdateVertex (vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap);
-void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
+void tstar_UpdateVertex (unordered_map<Point2D,vertex_s>* parentmap,vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap);
+void tstar_ComputeCost (unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
 bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid);
 vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D endpoint);
