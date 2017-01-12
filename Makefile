@@ -19,7 +19,7 @@ LDFLAGS     :=  -g
 # -MMD and -MP handle dependency generation
 CPPFLAGS	:=  -MMD -MP -I $(INC_DIR)
 # Compiler flags
-CXXFLAGS	:=  -Wall -std=c++14 -g
+CXXFLAGS	:=  -Wall -Wextra -std=c++14 -g
 
 .PHONY: all clean
 
@@ -38,12 +38,12 @@ $(EXECUTABLE):  $(OBJ_FILES) | $(BIN_DIR)
 $(BIN_DIR)/test_simple_mesh.exe:  test_simple_mesh.o point2d.o simple_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(BIN_DIR)/test_jump_mesh.exe:  test_jump_mesh.o point2d.o jump_mesh.o | $(BIN_DIR)
+$(BIN_DIR)/test_jump_mesh.exe:  test_jump_mesh.o point2d.o simple_mesh.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BIN_DIR)/test_tstar.exe:  Test_tstar.o tstar_algo.o simple_mesh.o point2d.o | $(BIN_DIR)
-	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@	
-	
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
 # .o files are build from the corresponding .cpp files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp| $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<

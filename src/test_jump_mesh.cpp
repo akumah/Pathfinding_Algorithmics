@@ -1,7 +1,8 @@
 
 #include <iostream>
 #include <unordered_set>
-#include "simple_mesh.hpp"
+#include "jump_mesh.hpp"
+#define SimpleMesh JumpMesh
 
 using namespace std;
 void print_header() {

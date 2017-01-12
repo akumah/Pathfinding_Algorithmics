@@ -12,7 +12,9 @@ void SimpleMesh::removeObstacle(const Point2D &org, const Point2D &shape) {
 
 /* Set the value of all elements in a subrectangle of mesh to value */
 void SimpleMesh::setSubRect(const Point2D& org, const Point2D& shape, int value) {
-	int start_idx = org.y * d_shape.x + org.x;
+	assert(shape.x > 0 && shape.y > 0 && org.x >= 0 && org.y >= 0);
+	assert(org.x + shape.x <= d_shape.x && org.y + shape.y <= d_shape.y);
+	unsigned int start_idx = org.y * d_shape.x + org.x;
 	d_data[std::gslice(start_idx, {shape.y, shape.x}, {d_shape.x, 1})] = value;
 }
 
@@ -52,7 +54,13 @@ float SimpleMesh::getDistance(const Point2D& from, const Point2D& to) const {
 	return euclideanDist(from, to);
 }
 
-float SimpleMesh::getHeuristic(const Point2D& from, const Point2D& to) const {
+float SimpleMesh::getHeuristic(const Point2D& from, const Point2D& to, bool warn) const {
+	/* In this case the warning makes no difference, but is required by interface.
+	 * Also, a child class might actually depend on the behaviour.
+	 */
+	if (warn && to != d_target) {
+		std::cerr << "WARNING: getHeuristic to an unset target called. Did you forget to call setTarget()?" << std::endl;
+	}
 	return SimpleMesh::getDistance(from, to);
 }
 
@@ -73,14 +81,17 @@ bool SimpleMesh::isVisible(const Point2D& from, const Point2D& to) const {
 		const float by = from.y - ay * from.x;  /*< Intercept in x */
 		auto yfunc = [&](int x){return ay * x + by;};
 		const int dirx = sgn(diff.x);  /*< Direction to iterate x in */
-		for (int x=from.x+1; x!=to.x; x += dirx){
-			int y = int(floor(yfunc(x)));  // The floor is important for negative values //
-			if (getArrayValue(x, y) && getArrayValue(x, y+1)) {
+		for (int x=from.x+dirx; x!=to.x; x += dirx){
+			float y = yfunc(x);
+			int i_y = int(floor(y)); // The floor is important for negative values //
+			if (getArrayValue(x, i_y) && getArrayValue(x, i_y+1)) {
 				return false;  // Encountered a vertical wall.
+			}
+			if (y == i_y && getArrayValue(x, i_y)){  //line crosses a wall exactly //
+				return false;
 			}
 		}
 	}
-
 	/* If program flow has reached here, then that means that no obstacle
 	 * was found by scanning through x, or that diff.x == 0 */
 	if (diff.y != 0) {
@@ -89,10 +100,14 @@ bool SimpleMesh::isVisible(const Point2D& from, const Point2D& to) const {
 		const float bx = from.x - ax * from.y;  /*< Intercept in y */
 		auto xfunc = [&](int y){return ax * y + bx;};
 		const int diry = sgn(diff.y);  /*< Direction to iterate x in */
-		for (int y=from.y+1; y!=to.y; y += diry){
-			int x = int(floor(xfunc(y)));  // The floor is important for negative values //
-			if (getArrayValue(x, y) && getArrayValue(x+1, y)) {
+		for (int y=from.y+diry; y!=to.y; y += diry){
+			float x = xfunc(y);
+			int i_x = int(floor(x));  // The floor is important for negative values //
+			if (getArrayValue(i_x, y) && getArrayValue(i_x+1, y)) {
 				return false;  // Encountered a horizontal wall.
+			}
+			if (x == i_x && getArrayValue(i_x, y)){  //line crosses a wall exactly //
+				return false;
 			}
 		}
 	}

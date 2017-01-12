@@ -26,6 +26,7 @@ Optimized like a mule on a skating rink.
 class SimpleMesh: public AnyAngleMesh {
 	std::valarray<bool> d_data;
 	const Point2D d_shape;  // This should not change, once initialized.
+	Point2D d_target;  // Only required for interface
 public:
 	SimpleMesh(const int width, const int height) :
 		d_data(width*height), d_shape(width, height) {};
@@ -34,12 +35,12 @@ public:
 	~SimpleMesh() {};
 
 	/* Pure virtuals from the interface */
+	void setTarget(const Point2D &) {};
 	std::vector<Point2D> getNeighbours(const Point2D &point) const;
 	bool isAccessible(const Point2D& point) const;
 	float getDistance(const Point2D& from, const Point2D& to) const;
-	float getHeuristic(const Point2D& from, const Point2D& to) const;
+	float getHeuristic(const Point2D& from, const Point2D& to, bool warn) const;
 	bool isVisible(const Point2D& from, const Point2D& to) const;
-
 
 	/* Add rectangular obstacle */
 	void addObstacle(const Point2D &org, const Point2D &shape);

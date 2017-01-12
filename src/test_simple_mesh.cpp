@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <unordered_set>
 #include "simple_mesh.hpp"
 
 using namespace std;
@@ -163,19 +162,27 @@ void test_SimpleMesh_isVisible() {
 	cout << "\t\tObstacle visibility" << endl;
 	to = Point2D(4, 4);
 	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	to = Point2D(4, 5);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
 	to = Point2D(4, 6);
 	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
 	to = Point2D(1, 8);
 	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	to = Point2D(2, 8);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
 	to = Point2D(3, 8);
 	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
-	cout << "\t\tObstacle visibility" << endl;
-	from = Point2D(4, 4);
+	cout << "\t\tReverse visibility" << endl;
 	to = Point2D(2, 5);
+	from = Point2D(4, 4);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	from = Point2D(4, 5);
 	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
 	from = Point2D(4, 6);
 	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
 	from = Point2D(1, 8);
+	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
+	from = Point2D(2, 8);
 	cout << "\t\t" << from << to << " : " << !(mesh.isVisible(from, to)) << endl;
 	from = Point2D(3, 8);
 	cout << "\t\t" << from << to << " : " << (mesh.isVisible(from, to)) << endl;
