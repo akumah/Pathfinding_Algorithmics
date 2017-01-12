@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	printMesh(mesh);
 	cout << endl;
 	result = tstar_mainLoop(mesh, initpoint,endpoint);
-	
+	result = astar_mainLoop(mesh, initpoint,endpoint);
 	
 	auto end = std::chrono::high_resolution_clock::now();
 	myfile << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()<<",";
