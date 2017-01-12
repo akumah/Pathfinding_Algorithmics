@@ -46,3 +46,9 @@ void tstar_UpdateVertex (unordered_map<Point2D,vertex_s>* parentmap,vertex_s s_g
 void tstar_ComputeCost (unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
 bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid);
 vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D endpoint);
+
+
+void astar_UpdateVertex (unordered_map<Point2D,vertex_s>* parentmap,vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap);
+void astar_ComputeCost (unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
+vector<Point2D> astar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D endpoint);
+
