@@ -24,9 +24,13 @@ is not.
 Optimized like a mule on a skating rink.
 */
 class SimpleMesh: public AnyAngleMesh {
+protected:
 	std::valarray<bool> d_data;
 	const Point2D d_shape;  // This should not change, once initialized.
 	Point2D d_target;  // Only required for interface
+	void setSubRect(const Point2D &org, const Point2D &shape, int value);
+	bool getArrayValue(const int x, const int y) const;
+	bool getArrayValue(const Point2D &point) const;
 public:
 	SimpleMesh(const int width, const int height) :
 		d_data(width*height), d_shape(width, height) {};
@@ -52,10 +56,7 @@ public:
 	const Point2D & getShape();
 	bool isInBounds(const Point2D &point) const;
 	friend void printMesh(const SimpleMesh &mesh);
-private:
-	void setSubRect(const Point2D &org, const Point2D &shape, int value);
-	bool getArrayValue(const int x, const int y) const;
-	bool getArrayValue(const Point2D &point) const;
+
 };
 
 #endif // SIMPLE_MESH_HPP_INCLUDED
