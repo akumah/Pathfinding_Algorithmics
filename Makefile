@@ -27,7 +27,7 @@ all:    $(EXECUTABLE)
 
 # Windows doesn't have rm. Damn windows.
 cleanwin:
-	del /Q $(OBJ_DIR) $(BIN_DIR)
+	rd /S /Q $(OBJ_DIR) $(BIN_DIR)
 
 clean:
 	$(RM) -r $(OBJ_DIR) $(BIN_DIR)

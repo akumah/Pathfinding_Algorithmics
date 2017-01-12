@@ -3,14 +3,21 @@
 #include <cmath> 
 #include "simple_mesh.hpp"
 #include "point2d.hpp"
+<<<<<<< HEAD
 #include <map>
+=======
+>>>>>>> 876c4fd2a15d95f9d348740d9bc867fd29a351e9
 using namespace std;
 class vertex_s{
 	
 	vertex_s* parent;	
 	int gvalue = 0;
+<<<<<<< HEAD
 	int hvalue = 0;
 
+=======
+	
+>>>>>>> 876c4fd2a15d95f9d348740d9bc867fd29a351e9
 	public:
 	int x; int y;
 	vertex_s(int, int);
@@ -40,7 +47,11 @@ class vertex_s{
 };
 
 
+<<<<<<< HEAD
 void tstar_UpdateVertex (vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap);
+=======
+void tstar_UpdateVertex (vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, vector<vertex_s>* open);
+>>>>>>> 876c4fd2a15d95f9d348740d9bc867fd29a351e9
 void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
 bool tstar_lineofsight(vertex_s s0, vertex_s s1, SimpleMesh meshgrid);
 vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D endpoint);
