@@ -147,11 +147,10 @@ vector<Point2D> tstar_mainLoop (SimpleMesh meshgrid, Point2D initpoint, Point2D 
 	//parentmap.insert(s_start,s_start);
 	openmap.insert(pair<float,vertex_s>(s_start.get_gvalue()+meshgrid.getDistance(s_start.get_point(), s_goal.get_point()), s_start ));
 	while (!openmap.empty()){
-		std::map<float,vertex_s>::iterator it = openmap.begin();
+	//	std::map<float,vertex_s>::iterator it = openmap.begin();
 		
 		temp_s = openmap.begin()->second;
-		vectorvertex.push_back(temp_s);
-		openmap.erase(it);
+		openmap.erase(openmap.begin());
 		//printf("The results: %d , %d \n" ,temp_s.get_point().x,temp_s.get_point().y );
 		
 		if (temp_s.get_point() == s_goal.get_point()){
