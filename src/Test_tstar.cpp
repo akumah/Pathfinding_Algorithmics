@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
 	SimpleMesh mesh(15, 15);
 	mesh.addObstacle({3, 3}, {8, 5});  // Implicit constructor of Point2D in arguments.
 
-	//mesh.removeObstacle(Point2D(4, 	5), Point2D(5, 4));
-	mesh.addObstacle({8, 8}, {2, 2});  // Implicit constructor of Point2D in arguments.
+	mesh.removeObstacle(Point2D(4, 	5), Point2D(5, 4));
+	mesh.addObstacle({8, 8}, {2, 4});  // Implicit constructor of Point2D in arguments.
 
 	printMesh(mesh);
 	cout << endl;
