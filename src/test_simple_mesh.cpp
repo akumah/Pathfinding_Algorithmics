@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <unordered_set>
 #include "simple_mesh.hpp"
 
 using namespace std;
@@ -51,12 +52,20 @@ bool test_Point2D_manhattan() {
     int expected = 6;
 	return (manhattanDist(point1, point2) == expected);
 }
+
 bool test_Point2D_euclidean() {
     Point2D point1(-3,2);
     Point2D point2(2,1);
     float expected = 5.0990195135;
     float result = euclideanDist(point1, point2);
 	return (result == expected);
+}
+
+/* If it doesn't crash, I assume it works */
+bool test_Point2D_hash() {
+    unordered_set<Point2D> pointset;
+    pointset.insert({2, -3});
+    return true;
 }
 
 /* Test creation of SimpleMesh.
@@ -200,6 +209,7 @@ int main(){
 	cout << "\tPoint2D add: " << test_Point2D_add() << endl;
 	cout << "\tPoint2D manhattanDist: " << test_Point2D_manhattan() << endl;
 	cout << "\tPoint2D euclideanDist: " << test_Point2D_euclidean() << endl;
+	cout << "\tPoint2D hash: " << test_Point2D_hash() << endl;
 	cout << "Done Point2D.\n" << endl;
 
 	cout << "Testing SimpleMesh:" << endl;

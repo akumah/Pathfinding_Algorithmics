@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <cstdio>
 #include "simple_mesh.hpp"
 #include "point2d.hpp"
 #include <map>
@@ -38,6 +39,7 @@ class vertex_s{
 
 	double straight_distance(vertex_s othervertex);
 };
+
 
 void tstar_UpdateVertex (vertex_s s_goal, vertex_s* temp_s, vertex_s* near_s, SimpleMesh meshgrid, map<float,vertex_s>* openmap);
 void tstar_ComputeCost (vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid );
