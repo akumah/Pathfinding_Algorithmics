@@ -24,13 +24,13 @@ int main(int argc, char *argv[]) {
 	auto begin = std::chrono::high_resolution_clock::now();
 
 	vector<Point2D> result;
-	Point2D initpoint = {5,5};
-	Point2D endpoint = {9,9};
+	Point2D initpoint = {7,8};
+	Point2D endpoint = {1,1};
 	
 	
 	SimpleMesh mesh(15, 10);
 	mesh.addObstacle({3, 3}, {8, 5});  // Implicit constructor of Point2D in arguments.
-	mesh.removeObstacle(Point2D(4, 4), Point2D(5, 3));
+	mesh.removeObstacle(Point2D(4, 	5), Point2D(5, 4));
 	printMesh(mesh);
 	cout << endl;
 	result = tstar_mainLoop(mesh, initpoint,endpoint);
