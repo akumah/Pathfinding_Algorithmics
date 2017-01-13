@@ -123,7 +123,7 @@ void astar_UpdateVertex (unordered_map<Point2D,vertex_s>* parentmap,vertex_s s_g
 
 void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
 	std::unordered_map<Point2D,vertex_s>::iterator it;
-	it = parentmap->find(s0->get_parent()->get_point());
+	it = parentmap->find(s0->get_point());
 	vertex_s* aword;
 	if (it != parentmap->end()){
 				//parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
@@ -148,7 +148,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 
 			std::unordered_map<Point2D,vertex_s>::iterator it;
 			s1->set_parent(aword);
-			it = parentmap->find(s0->get_parent()->get_point());
+			it = parentmap->find(aword->get_point());
 			if (it != parentmap->end()){
 				//parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));
 				parentmap->emplace(pair<Point2D,vertex_s>(s1->get_point(), *aword));
@@ -190,7 +190,7 @@ void tstar_ComputeCost(unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0,
 
 void astar_ComputeCost (unordered_map<Point2D,vertex_s>* parentmap, vertex_s* s0, vertex_s* s1, SimpleMesh meshgrid ){
 std::unordered_map<Point2D,vertex_s>::iterator it;
-	it = parentmap->find(s0->get_parent()->get_point());
+	it = parentmap->find(s0->get_point());
 	vertex_s* aword;
 	if (it != parentmap->end()){
 				//parentmap->emplace(pair<Point2D,vertex_s>(s0->get_parent()->get_point(), *s1));

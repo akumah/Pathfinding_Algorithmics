@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	cout << endl;
-	/*Point2D initpoint = {2,6};
+	Point2D initpoint = {2,6};
 	Point2D endpoint = {12,8};
 	
 	
@@ -43,9 +43,7 @@ int main(int argc, char *argv[]) {
 	result = astar_mainLoop(mesh, initpoint,endpoint);
 	
 	
-	*/
-	
-	
+	/*
 	int dim = 150;
 	SimpleMesh mesh(dim, dim);
 	int obstaclenumber = 150;
@@ -80,7 +78,7 @@ int main(int argc, char *argv[]) {
 	result = astar_mainLoop(mesh, initpoint,endpoint);
 	end = std::chrono::high_resolution_clock::now();
 	myfile << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()<<",";
-
+*/
 	myfile.close();
 
 
