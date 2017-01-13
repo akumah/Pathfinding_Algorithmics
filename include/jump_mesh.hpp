@@ -33,6 +33,7 @@ public:
 	}
 
 	std::vector<Point2D> getNeighbours(const Point2D &point) const;
+	void setTarget(const Point2D &point) {d_target = point;};
 };
 
 #endif // JUMP_MESH_HPP_INCLUDED

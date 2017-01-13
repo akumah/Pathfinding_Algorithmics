@@ -44,6 +44,9 @@ $(BIN_DIR)/test_jump_mesh.exe:  test_jump_mesh.o point2d.o simple_mesh.o jump_me
 $(BIN_DIR)/test_tstar.exe:  Test_tstar.o tstar_algo.o simple_mesh.o point2d.o | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
+$(BIN_DIR)/test_tstar_jump.exe:  Test_tstar_jump.o tstar_algo_jump.o simple_mesh.o jump_mesh.o point2d.o | $(BIN_DIR)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
 # .o files are build from the corresponding .cpp files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp| $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
