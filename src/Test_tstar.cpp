@@ -16,7 +16,9 @@ int main(int argc, char *argv[]) {
 
 	ofstream myfile;
 
-    myfile.open ("OutputTable.csv");
+    myfile.open (argv[1]);
+	
+    //myfile.open ("OutputTable.csv");
 	myfile << "Here are the times for the algorithm run times.\n";
 	myfile.precision(10);
 
@@ -24,7 +26,7 @@ int main(int argc, char *argv[]) {
 	
 	vector<Point2D> result;
 
-	
+	/*
 	
 	cout << endl;
 	Point2D initpoint = {2,6};
@@ -42,12 +44,12 @@ int main(int argc, char *argv[]) {
 	result = tstar_mainLoop(mesh, initpoint,endpoint);
 	result = astar_mainLoop(mesh, initpoint,endpoint);
 	
+	*/
 	
-	/*
-	int dim = 150;
+	int dim = 200;
 	SimpleMesh mesh(dim, dim);
-	int obstaclenumber = 150;
-	int obstaclesize = 10;
+	int obstaclenumber = 225;
+	int obstaclesize = 13;
 	int c1; int c2; int c3; int c4;
 	for (int i = 0; i< obstaclenumber; i++){
 				c1 = 1+rand() % obstaclesize;
@@ -58,13 +60,13 @@ int main(int argc, char *argv[]) {
 				
 	}
 	
-	//printMesh(mesh);
+	printMesh(mesh);
 	
 	
 
 	
 	Point2D initpoint = {1,1};
-	Point2D endpoint = {148,148};
+	Point2D endpoint = {198,198};
 	
 
 	auto begin = std::chrono::high_resolution_clock::now();
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]) {
 	result = astar_mainLoop(mesh, initpoint,endpoint);
 	end = std::chrono::high_resolution_clock::now();
 	myfile << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()<<",";
-*/
+
 	myfile.close();
 
 
